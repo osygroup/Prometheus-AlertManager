@@ -1,0 +1,36 @@
+rule_files:
+  - /etc/prometheus/prometheus.rules
+alerting:
+  alertmanagers:
+  - scheme: http
+    static_configs:
+    - targets:
+      - "52.51.234.60:9093"
+
+global:
+  scrape_interval: 15s
+scrape_configs:
+  - job_name: cAdvisor
+    static_configs:
+      - targets: [52.51.234.60:9092]
+
+  - job_name: blackbox
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+        - https://clockifi-dev.tellerium.io
+        - https://canteen-api-dev.tellerium.io
+        - https://karrium-dev.tellerium.io
+        - https://karrium-api-dev.tellerium.io
+        - https://map-plotter-dev.tellerium.io
+        - https://tellagri-dev.tellerium.io
+        - https://tellagri-api-dev.tellerium.io
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 172.17.0.15:9115 #blackbox_service:port

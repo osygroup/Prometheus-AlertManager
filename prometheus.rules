@@ -1,0 +1,10 @@
+groups:
+- name: demo alert
+  rules:
+  - alert: EndpointDown
+    expr: probe_success == 0
+    for: 10s
+    labels:
+      severity: "critical"
+    annotations:
+      summary: "Endpoint down"
