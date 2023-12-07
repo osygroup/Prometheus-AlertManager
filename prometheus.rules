@@ -1,10 +1,12 @@
 groups:
-- name: demo alert
+- name: Leatherback Services Alert
   rules:
-  - alert: EndpointDown
+  - alert: Endpoint Down
     expr: probe_success == 0
     for: 10s
     labels:
       severity: "critical"
     annotations:
       summary: "Endpoint down"
+      identifier: '{{ $labels.instance }}'
+      description: 'This service has been down for more than 5 minutes.'
